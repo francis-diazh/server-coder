@@ -1,5 +1,6 @@
 import express from "express"
-import 'dotenv/config.js'
+import 'dotenv/config.js'  //configura las variables de entorno
+import router from "./router/index.js"
 import error_handler from "./middlewares/error.js"
 import not_found_handler from "./middlewares/notfound.js"
 
@@ -11,7 +12,7 @@ server.use(express.json()) // con este metodo podemos leer transformar manejar d
 server.use(express.urlencoded({extended:true})) //metodo para leer consultas (params query)
 
 //endpoint
-// server.use('/api',index_router)
+server.use('/api',router)
 server.use(error_handler) //errores que suceden en los endpoints
 server.use(not_found_handler) //errores de endpoint que no existen
 

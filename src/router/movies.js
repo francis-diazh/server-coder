@@ -19,24 +19,41 @@ movies_router.post(   // se definen 2 parametros, la / y una funcion async
 )
 
 
+// movies_router.get(
+//     '/',
+//     async(req,res,next) => {
+//         try {
+//             let all = await Movie.find()
+//             if(all){
+//                 return res.status(200).json({ //exito de todas las operaciones es 200
+//                     success:true,
+//                     data:all
+//                 }) 
+//             }else{
+//                 return res.status(404).json({
+//                     success: false,
+//                     message:  "not found"
+//                 })
+//             }
+//         } catch (error) {
+//             next(error)
+//         }
+//     }
+// )
+
 movies_router.get(
-    '/',
-    async(req,res,next) => {
+    '/query-stats',
+    async (req,res,next) => {
         try {
-            let all = await Movie.find()
-            if(all){
-                return res.status(200).json({ //exito de todas las operaciones es 200
-                    success:true,
-                    data:all
-                }) 
-            }else{
-                return res.status(404).json({
-                    success: false,
-                    message:  "not found"
-                })
-            }
+            let quantity = await Movie.find({price: {$gt: 40}})
+            let stats = await Movie.find ({price: {$gt: 40}}).explain('executionStats')
+            return res.status(200).json({
+                success: true,
+                quantity: quantity.length,
+                time: stats.executionStats.executionTimeMillis
+            })
         } catch (error) {
-            next(error)
+            next (error) 
         }
     }
 )
